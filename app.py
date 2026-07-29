@@ -117,8 +117,23 @@ except Exception as e:
 
 # Interactive Form
 st.markdown("### 📝 Enter Statement to Analyze")
+
+# Preset Sample Selection
+if 'input_text' not in st.session_state:
+    st.session_state.input_text = ""
+
+st.caption("Try one of these sample statements:")
+col_ex1, col_ex2 = st.columns(2)
+
+if col_ex1.button("📄 Sample 1: Formal/Reliable", use_container_width=True):
+    st.session_state.input_text = "The committee published the quarterly financial oversight report following the bipartisan audit."
+
+if col_ex2.button("⚠️ Sample 2: Sensational/Unreliable", use_container_width=True):
+    st.session_state.input_text = "Look, everybody knows these corrupt politicians are lying constantly and ruining our economy completely!"
+
 user_text = st.text_area(
     label="Statement Input",
+    value=st.session_state.input_text,
     placeholder="e.g., The committee published the quarterly financial oversight report following the bipartisan audit...",
     height=130,
     label_visibility="collapsed"
@@ -181,7 +196,7 @@ if analyze_btn:
         with st.expander("🔍 Inspection Drawer: Extracted POS Features"):
             st.write("Live Part-of-Speech counts parsed from your statement:")
             
-            # Show non-zero features as chips/table
+            # Show non-zero features as table
             extracted_features = {k: v for k, v in tag_counts.items() if v > 0}
             if extracted_features:
                 feats_df = pd.DataFrame(list(extracted_features.items()), columns=["POS Tag", "Count"])
